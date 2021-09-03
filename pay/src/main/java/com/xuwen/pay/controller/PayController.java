@@ -2,11 +2,10 @@ package com.xuwen.pay.controller;
 
 import com.lly835.bestpay.model.PayResponse;
 import com.xuwen.pay.service.Impl.PayService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
@@ -17,7 +16,7 @@ import java.util.Map;
  * author:xuwen
  * Created on 2021/9/3
  */
-
+@Slf4j
 @Controller
 @RequestMapping("/pay")
 public class PayController {
@@ -35,6 +34,14 @@ public class PayController {
         map.put("codeUrl",response.getCodeUrl());
         return new ModelAndView("create",map);
     }
+
+
+    @PostMapping("/nofity")
+    public void asyncNotify(@RequestBody String notifyData){
+        payService.asyncNotify(notifyData);
+
+    }
+
 
 
 }

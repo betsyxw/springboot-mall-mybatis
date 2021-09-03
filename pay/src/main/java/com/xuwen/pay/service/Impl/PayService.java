@@ -4,9 +4,11 @@ import com.lly835.bestpay.config.WxPayConfig;
 import com.lly835.bestpay.enums.BestPayTypeEnum;
 import com.lly835.bestpay.model.PayRequest;
 import com.lly835.bestpay.model.PayResponse;
+import com.lly835.bestpay.service.BestPayService;
 import com.lly835.bestpay.service.impl.BestPayServiceImpl;
 import com.xuwen.pay.service.IPayService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,18 +22,12 @@ import java.math.BigDecimal;
 @Service
 public class PayService implements IPayService {
 
+    //自己写个config，Bean注入一下，不用一直new
+    @Autowired
+    private BestPayService bestPayService;
+
     @Override
     public PayResponse create(String orderId, BigDecimal amount) {
-        WxPayConfig wxPayConfig = new WxPayConfig();
-        wxPayConfig.setAppId("wxd898fcb01713c658");
-        wxPayConfig.setMchId("1483469312");
-        wxPayConfig.setMchKey("7mdApPMfXddfWWbbP4DUaVYm2wjyh3v3");
-        wxPayConfig.setNotifyUrl("http://127.0.0.1");
-
-
-        BestPayServiceImpl bestPayService = new BestPayServiceImpl();
-        bestPayService.setWxPayConfig(wxPayConfig);
-
 
         PayRequest request = new PayRequest();
         request.setOrderName("3977952-最好的支付sdk");
@@ -43,6 +39,18 @@ public class PayService implements IPayService {
         log.info("response={}",response);
 
         return response;
+
+    }
+
+
+
+    //异步通知，方法重写
+    @Override
+    public void asyncNotify(String notifyData) {
+        //1签名校验+订单金额校验
+        PayResponse payResponse = bestPayService.asyncNotify(notifyData);
+        log.info("payResponse=>",payResponse);
+
 
     }
 
