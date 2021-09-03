@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: mall
+    password: passMall123
+    url: jdbc:mysql://rm-uf6t9m0yx22dxrya5no.mysql.rds.aliyuncs.com:3306/mall?characterEncoding=UTF8&useSSL=false
+logging:
+  pattern:
+    console: "[%thread] %-5level %logger{36} - %msg%n"
+
