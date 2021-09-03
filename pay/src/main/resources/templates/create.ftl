@@ -17,8 +17,7 @@
 
 <script>
     var qrcode = new QRCode("myQrcode");
-    qrcode.makeCode("weixin://wxpay/bizpayurl?pr=0DN6riNzz");
-
+    qrcode.makeCode("${codeUrl}");
 </script>
 </body>
 

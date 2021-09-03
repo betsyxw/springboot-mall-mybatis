@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 public class PayService implements IPayService {
 
     @Override
-    public void create(String orderId, BigDecimal amount) {
+    public PayResponse create(String orderId, BigDecimal amount) {
         WxPayConfig wxPayConfig = new WxPayConfig();
         wxPayConfig.setAppId("wxd898fcb01713c658");
         wxPayConfig.setMchId("1483469312");
@@ -41,6 +41,8 @@ public class PayService implements IPayService {
 
         PayResponse response = bestPayService.pay(request);
         log.info("response={}",response);
+
+        return response;
 
     }
 
