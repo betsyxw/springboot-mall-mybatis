@@ -7,6 +7,8 @@
     <classPathEntry location="/Users/xuwen/desktop/springboot/xuwen-mallproject/mysql-connector-java-5.1.6.jar" />
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <!--        注意顺序，否则报错-->
+        <!--        不再追加xml内容-->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
         <commentGenerator>
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>

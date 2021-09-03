@@ -1,8 +1,14 @@
 package com.xuwen.javamall.pojo;
 
+import lombok.Data;
+import lombok.ToString;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
+
+@ToString
+@Data
 public class Order {
     private Integer id;
 
