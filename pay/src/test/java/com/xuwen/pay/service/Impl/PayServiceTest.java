@@ -16,7 +16,7 @@ public class PayServiceTest extends PayApplicationTests {
 
     @Test
     public void create() {
-        payService.create("1234999567", BigDecimal.valueOf(0.01));
+        payService.create("126655322", BigDecimal.valueOf(0.01));
 
 
     }
