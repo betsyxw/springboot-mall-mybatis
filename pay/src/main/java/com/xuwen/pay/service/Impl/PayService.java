@@ -26,6 +26,7 @@ public class PayService implements IPayService {
     @Autowired
     private BestPayService bestPayService;
 
+    //写入数据库
     @Override
     public PayResponse create(String orderId, BigDecimal amount) {
 
@@ -46,13 +47,31 @@ public class PayService implements IPayService {
 
     //异步通知，方法重写
     @Override
-    public void asyncNotify(String notifyData) {
+    public String asyncNotify(String notifyData) {
         //1签名校验+订单金额校验
         PayResponse payResponse = bestPayService.asyncNotify(notifyData);
         log.info("payResponse=>",payResponse);
 
 
+        //2从数据库中查订单，核对订单金额
+
+
+        //3修改订单状态
+
+
+        //4告诉微信,代码来自官网文档：https://pay.weixin.qq.com/wiki/doc/api/index.html
+        return "<xml>\n" +
+                "  <return_code><![CDATA[SUCCESS]]></return_code>\n" +
+                "  <return_msg><![CDATA[OK]]></return_msg>\n" +
+                "</xml>";
+
+
+
     }
+
+
+
+
 
 
 }

@@ -17,6 +17,6 @@ public interface IPayService {
     /**
      * 异步通知
      * */
-    void asyncNotify(String notifyData);
+    String asyncNotify(String notifyData);
 
 }
