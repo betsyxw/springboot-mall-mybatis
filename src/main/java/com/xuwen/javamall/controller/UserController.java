@@ -20,7 +20,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseVo register(@RequestBody User user){
         log.info("username={}",user.getUsername());
-        return ResponseVo.success("注册成功！");
+        return ResponseVo.success();
     }
 
 

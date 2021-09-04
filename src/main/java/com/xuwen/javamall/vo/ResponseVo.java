@@ -1,6 +1,7 @@
 package com.xuwen.javamall.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.xuwen.javamall.enums.ResponseEnum;
 import lombok.Data;
 
 /**
@@ -24,7 +25,12 @@ public class ResponseVo<T> {
 
     //静态方法，msg提示
     public static <T> ResponseVo<T> success(String msg){
-        return new ResponseVo(0,msg);
+        return new ResponseVo(ResponseEnum.SUCCESS.getCode(),msg);
+    }
+
+    //静态方法，重载
+    public static <T> ResponseVo<T> success(){
+        return new ResponseVo(ResponseEnum.SUCCESS.getCode(),ResponseEnum.SUCCESS.getDesc());
     }
 
 }
