@@ -26,6 +26,7 @@ public class User {
 
     private Date updateTime;
 
+    //构造方法，测试service层
     public User(String username, String password, String email, Integer role) {
         this.username = username;
         this.password = password;

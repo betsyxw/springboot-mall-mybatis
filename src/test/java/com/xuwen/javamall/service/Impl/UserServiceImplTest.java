@@ -1,6 +1,7 @@
 package com.xuwen.javamall.service.Impl;
 
 import com.xuwen.javamall.JavamallApplicationTests;
+import com.xuwen.javamall.enums.RoleEnum;
 import com.xuwen.javamall.pojo.User;
 import com.xuwen.javamall.service.IUserService;
 import org.junit.Test;
@@ -15,7 +16,8 @@ public class UserServiceImplTest extends JavamallApplicationTests {
 
     @Test
     public void register() {
-        User user = new User("betsy","123456","betsy@qq.com",1);
+        User user = new User("zhangsan","123456","zhangsan@qq.com", RoleEnum.CUSTOMER.getCode());
         userService.register(user);
+        System.out.println("数据注册成功！");
     }
 }
