@@ -33,4 +33,14 @@ public class ResponseVo<T> {
         return new ResponseVo(ResponseEnum.SUCCESS.getCode(),ResponseEnum.SUCCESS.getDesc());
     }
 
+    //静态方法，error
+    public static <T> ResponseVo<T> error(ResponseEnum responseEnum){
+        return new ResponseVo(responseEnum.getCode(),responseEnum.getDesc());
+    }
+
+    //静态方法，error
+    public static <T> ResponseVo<T> error(ResponseEnum responseEnum,String msg){
+        return new ResponseVo(responseEnum.getCode(),msg);
+    }
+
 }
