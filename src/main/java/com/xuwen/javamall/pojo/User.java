@@ -33,4 +33,8 @@ public class User {
         this.email = email;
         this.role = role;
     }
+
+    //无参数构造器
+    public User() {
+    }
 }
