@@ -43,6 +43,12 @@ public class PayController {
 
     }
 
+//    //返回订单查询id
+//    @GetMapping("/queryByOrderId")
+//    public PayInfo queryByOrderId(@RequestParam String orderId){
+//        return payService.queryByOrderId(orderId);
+//    }
+
 
 
 }
