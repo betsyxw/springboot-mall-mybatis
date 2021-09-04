@@ -29,7 +29,8 @@ public class UserServiceImpl implements IUserService {
      * */
     @Override
     public ResponseVo register(User user) {
-        error();
+        //错误测试，自己下面写个方法
+//        error();
 
         //1先查数据库，参数校验，用户名不能重复，邮箱不能重复，2写入数据库
         //查用户名
@@ -63,6 +64,8 @@ public class UserServiceImpl implements IUserService {
 
     //模拟一个错误，仍一个运行时exception
     private void error(){
-       throw new RuntimeException("意外错误！");
+        throw new RuntimeException("意外错误！");
     }
+
+
 }
