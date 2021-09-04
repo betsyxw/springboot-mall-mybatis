@@ -3,6 +3,7 @@ package com.xuwen.javamall.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xuwen.javamall.enums.ResponseEnum;
 import lombok.Data;
+import org.springframework.validation.BindingResult;
 
 /**
  * author:xuwen
@@ -33,14 +34,20 @@ public class ResponseVo<T> {
         return new ResponseVo(ResponseEnum.SUCCESS.getCode(),ResponseEnum.SUCCESS.getDesc());
     }
 
-    //静态方法，error
+    //静态方法，error1
     public static <T> ResponseVo<T> error(ResponseEnum responseEnum){
         return new ResponseVo(responseEnum.getCode(),responseEnum.getDesc());
     }
 
-    //静态方法，error
+    //静态方法，error2
     public static <T> ResponseVo<T> error(ResponseEnum responseEnum,String msg){
         return new ResponseVo(responseEnum.getCode(),msg);
+    }
+
+    //静态方法，error3
+    public static <T> ResponseVo error(ResponseEnum responseEnum, BindingResult bindingResult){
+        return new ResponseVo(responseEnum.getCode(),
+                bindingResult.getFieldError().getField()+" "+bindingResult.getFieldError().getDefaultMessage());
     }
 
 }

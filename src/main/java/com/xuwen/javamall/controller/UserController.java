@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 /**
  * author:xuwen
@@ -25,8 +26,8 @@ public class UserController {
     @PostMapping("/register")
     public ResponseVo register(@Valid @RequestBody UserForm userForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            log.error("注册提交的参数有误{}{}=>",bindingResult.getFieldError().getField(),bindingResult.getFieldError().getDefaultMessage());
-            return ResponseVo.error(ResponseEnum.PARAM_ERROR,bindingResult.getFieldError().getField()+" "+bindingResult.getFieldError().getDefaultMessage());
+            log.error("注册提交的参数有误{}{}=>", Objects.requireNonNull(bindingResult.getFieldError()).getField(),bindingResult.getFieldError().getDefaultMessage());
+            return ResponseVo.error(ResponseEnum.PARAM_ERROR,bindingResult);
         }
 
         log.info("username={}",userForm.getUsername());
