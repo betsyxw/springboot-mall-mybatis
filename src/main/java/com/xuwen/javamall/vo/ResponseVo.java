@@ -19,15 +19,29 @@ public class ResponseVo<T> {
 
 
     //构造方法
-    public ResponseVo(Integer status, String msg) {
+    private ResponseVo(Integer status, String msg) {
         this.status = status;
         this.msg = msg;
     }
 
+    //构造方法
+    private ResponseVo(Integer status, T data) {
+        this.status = status;
+        this.data = data;
+    }
+
     //静态方法，msg提示
     public static <T> ResponseVo<T> success(String msg){
+
         return new ResponseVo(ResponseEnum.SUCCESS.getCode(),msg);
     }
+
+    //静态方法，data
+    public static <T> ResponseVo<T> success(T data){
+
+        return new ResponseVo(ResponseEnum.SUCCESS.getCode(),data);
+    }
+
 
     //静态方法，重载
     public static <T> ResponseVo<T> success(){

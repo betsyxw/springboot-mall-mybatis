@@ -28,9 +28,9 @@ public class UserServiceImpl implements IUserService {
      * @param user
      * */
     @Override
-    public ResponseVo register(User user) {
+    public ResponseVo<User> register(User user) {
         //错误测试，自己下面写个方法
-//        error();
+       //error();
 
         //1先查数据库，参数校验，用户名不能重复，邮箱不能重复，2写入数据库
         //查用户名
@@ -48,8 +48,11 @@ public class UserServiceImpl implements IUserService {
         user.setRole(RoleEnum.CUSTOMER.getCode());
 
         //处理密码md5--springboot自带，DigestUtil包,选返回值string那个
-        String md5DigestAsHex = DigestUtils.md5DigestAsHex(user.getPassword().getBytes(StandardCharsets.UTF_8));
-        user.setPassword(md5DigestAsHex);
+//        String md5DigestAsHex = DigestUtils.md5DigestAsHex(user.getPassword().getBytes(StandardCharsets.UTF_8));
+//        user.setPassword(md5DigestAsHex);
+        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes(StandardCharsets.UTF_8)
+        ));
+
 
         //写入数据库
         //insertSelective有返回值
@@ -62,10 +65,34 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    /**
+     * 登陆
+     * @param
+     * */
+    //登陆
+    @Override
+    public ResponseVo<User> login(String username, String password) {
+        User user = userMapper.selectByUsername(username);
+        if(user == null){
+            //用户不存在(返回，用户名或者密码错误，统一)
+            return ResponseVo.error(ResponseEnum.USERNAME_OR_PASSWORD_ERROR);
+        }
+        //数据库password，是否等于用户输入的password
+        if (!user.getPassword().equalsIgnoreCase(
+                DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)))) {
+            //密码错误(返回，用户名或者密码错误，统一)
+            return ResponseVo.error(ResponseEnum.USERNAME_OR_PASSWORD_ERROR);
+        }
+        //返回，成功！
+        return ResponseVo.success(user);
+    }
+
+
     //模拟一个错误，仍一个运行时exception
     private void error(){
         throw new RuntimeException("意外错误！");
     }
+
 
 
 }

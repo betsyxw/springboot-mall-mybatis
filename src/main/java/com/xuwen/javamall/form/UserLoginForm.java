@@ -9,10 +9,8 @@ import javax.validation.constraints.NotBlank;
  * Created on 2021/9/4
  */
 @Data
-public class UserForm {
-    //@NotEmpt用于集合
-    //@NotBlank用于String ，判断空格
-    //@NotNull
+public class UserLoginForm {
+//数据类不要耦合！！！
 
     @NotBlank
     private String username;
@@ -20,7 +18,5 @@ public class UserForm {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String email;
 
 }
