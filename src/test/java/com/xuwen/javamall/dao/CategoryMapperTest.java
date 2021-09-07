@@ -18,16 +18,16 @@ public class CategoryMapperTest extends JavamallApplicationTests {
     @Autowired
     private CategoryMapper categoryMapper;
 
-    @Test
-    public void findById() {
-        Category restfindById = categoryMapper.findById(100001);
-        System.out.println(restfindById);
-        System.out.println(restfindById.toString());
-    }
-
-    @Test
-    public void queryById() {
-        Category queryById = categoryMapper.queryById(100002);
-        System.out.println(queryById.toString());
-    }
+//    @Test
+//    public void findById() {
+//        Category restfindById = categoryMapper.findById(100001);
+//        System.out.println(restfindById);
+//        System.out.println(restfindById.toString());
+//    }
+//
+//    @Test
+//    public void queryById() {
+//        Category queryById = categoryMapper.queryById(100002);
+//        System.out.println(queryById.toString());
+//    }
 }
