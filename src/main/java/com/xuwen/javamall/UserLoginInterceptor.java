@@ -32,6 +32,7 @@ public class UserLoginInterceptor implements HandlerInterceptor {
             throw new UserloginException();
             //return false;
             //用户未登录-》需要登陆
+            //需要返回的信息，用异常抛出，再捕获,再处理
             //return ResponseVo.error(ResponseEnum.NEED_LOGIN);
         }
         return true;

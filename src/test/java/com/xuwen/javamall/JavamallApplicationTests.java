@@ -13,23 +13,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class JavamallApplicationTests {
 
-//    @Autowired
-//    private CategoryMapper categoryMapper;
-//    //Test1
-//    @Test
-//    public void contextLoads() {
-//        Category restfindById = categoryMapper.findById(100001);
-//        System.out.println(restfindById);
-//        System.out.println(restfindById.toString());
-//
-//    }
-//
-//    //Test2
-//    @Test
-//    public void queryByIdTest(){
-//        Category queryById = categoryMapper.queryById(100002);
-//        System.out.println(queryById.toString());
-//
-//    }
+    //初始化需要有个方法，否则build报错
+    @Test
+    public void load(){
+        System.out.println("loading!!!test");
+    }
+
 
 }
