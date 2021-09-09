@@ -32,7 +32,8 @@ public class CategoryServiceImpl implements ICategoryService {
     public ResponseVo<List<CategoryVo>> selectAll() {
         //前端显示,返回数据新集合
         //List<CategoryVo> categoryVoList = new ArrayList<>();
-        //数据库中信息,查出来
+        //数据库中信息,查出来,数据源！！！
+        //categories是数据源，是数据库内所有数据
         List<Category> categories = categoryMapper.selectAll();
         //先查出parent_id=0
         //for循环的方式，方式一
@@ -52,8 +53,27 @@ public class CategoryServiceImpl implements ICategoryService {
                 .map(this::category2CategoryVo)
                 .collect(Collectors.toList());
 
+        //查询子目录
+        findSubCategory(categoryVoList,categories);
+
 
         return ResponseVo.success(categoryVoList);
+    }
+
+    //方法
+    private void findSubCategory(List<CategoryVo> categoryVoList,List<Category> categories){
+        for (CategoryVo categoryVo : categoryVoList) {
+            List<CategoryVo> subCategoryVoList = new ArrayList<>();
+
+            for (Category category : categories) {
+                //如果查到了，说明子目录有信息，设置子目录subCategory,+继续往下查
+                if(categoryVo.getId().equals(category.getParentId())){
+                    CategoryVo subCategoryVo = category2CategoryVo(category);
+                    subCategoryVoList.add(subCategoryVo);
+                }
+                categoryVo.setSubCategories(subCategoryVoList);
+            }
+        }
     }
 
     //方法,对象转换
