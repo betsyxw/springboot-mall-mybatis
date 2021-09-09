@@ -22,6 +22,9 @@ import static com.xuwen.javamall.consts.MallConst.ROOT_PARENT_ID;
  */
 /*
 *耗时：22ms，递归查询
+* http(请求微信api)>磁盘>java内存,
+* mysql(内网+磁盘)
+* 网络http请求是最慢的
 * */
 
 //数据库，接口的实现类
