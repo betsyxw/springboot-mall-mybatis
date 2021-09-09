@@ -32,6 +32,8 @@ public class CategoryServiceImpl implements ICategoryService {
     public ResponseVo<List<CategoryVo>> selectAll() {
         //前端显示,返回数据新集合
         //List<CategoryVo> categoryVoList = new ArrayList<>();
+
+
         //数据库中信息,查出来,数据源！！！
         //categories是数据源，是数据库内所有数据
         List<Category> categories = categoryMapper.selectAll();
@@ -53,7 +55,7 @@ public class CategoryServiceImpl implements ICategoryService {
                 .map(this::category2CategoryVo)
                 .collect(Collectors.toList());
 
-        //查询子目录
+        //查询子目录,从categories数据源中，查找categoryVoList
         findSubCategory(categoryVoList,categories);
 
 
@@ -67,16 +69,20 @@ public class CategoryServiceImpl implements ICategoryService {
 
             for (Category category : categories) {
                 //如果查到了，说明子目录有信息，设置子目录subCategory,+继续往下查
+                //categoryVo中的id=数据源category的父Id
                 if(categoryVo.getId().equals(category.getParentId())){
                     CategoryVo subCategoryVo = category2CategoryVo(category);
                     subCategoryVoList.add(subCategoryVo);
                 }
+                //数据关联
                 categoryVo.setSubCategories(subCategoryVoList);
+                //继续向下查,第一个参数，子目录，第二个参数是数据源
+                findSubCategory(subCategoryVoList,categories);
             }
         }
     }
 
-    //方法,对象转换
+    //方法,对象转换,category->categoryVo
     private CategoryVo category2CategoryVo(Category category){
         CategoryVo categoryVo = new CategoryVo();
         BeanUtils.copyProperties(category,categoryVo);
