@@ -16,6 +16,10 @@ import java.util.List;
 
 @RestController
 public class CategoryController {
+    /*
+    *controlller调用servie，先注入
+ service数据
+  * */
     @Autowired
     private ICategoryService categoryService;
 

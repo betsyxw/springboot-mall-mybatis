@@ -8,7 +8,7 @@ import java.util.List;
  * author:xuwen
  * Created on 2021/9/7
  */
-//查询后，返回的数据类型
+//数据库查询后，返回的数据类型
 @Data
 public class CategoryVo {
     private Integer id;
@@ -19,6 +19,7 @@ public class CategoryVo {
 
     private Integer sortOrder;
 
+    //子类目，List类型，泛型确定传入的值类型
     private List<CategoryVo> subCategories;
 
 

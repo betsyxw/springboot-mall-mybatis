@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 //导入常量包
 import static com.xuwen.javamall.consts.MallConst.ROOT_PARENT_ID;
 
@@ -18,6 +19,8 @@ import static com.xuwen.javamall.consts.MallConst.ROOT_PARENT_ID;
  * author:xuwen
  * Created on 2021/9/7
  */
+
+//数据库，接口的实现类
 
 @Service
 public class CategoryServiceImpl implements ICategoryService {
@@ -27,21 +30,38 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public ResponseVo<List<CategoryVo>> selectAll() {
-        List<CategoryVo> categoryVoList = new ArrayList<>();
-        //注入数据库dao包mapper内容
+        //前端显示,返回数据新集合
+        //List<CategoryVo> categoryVoList = new ArrayList<>();
+        //数据库中信息,查出来
         List<Category> categories = categoryMapper.selectAll();
         //先查出parent_id=0
-        for (Category category : categories) {
-            if(category.getParentId().equals(ROOT_PARENT_ID)){
-                CategoryVo categoryVo = new CategoryVo();
-                BeanUtils.copyProperties(category,categoryVo);
-                categoryVoList.add(categoryVo);
+        //for循环的方式，方式一
+//        for (Category category : categories) {
+//            if(category.getParentId().equals(ROOT_PARENT_ID)){
+//                CategoryVo categoryVo = new CategoryVo();
+//                //copy category（source），信息copy去categoryVo（target）
+//                BeanUtils.copyProperties(category,categoryVo);
+//                categoryVoList.add(categoryVo);
+//            }
+//        }
 
-            }
-        }
+        //方式二：lambda+stream
+        //e-target,e.我只需要getParentId=0的数据
+        List<CategoryVo> categoryVoList = categories.stream()
+                .filter(e -> e.getParentId().equals(ROOT_PARENT_ID))
+                .map(this::category2CategoryVo)
+                .collect(Collectors.toList());
+
+
         return ResponseVo.success(categoryVoList);
     }
 
+    //方法,对象转换
+    private CategoryVo category2CategoryVo(Category category){
+        CategoryVo categoryVo = new CategoryVo();
+        BeanUtils.copyProperties(category,categoryVo);
+        return categoryVo;
+    }
 
 
 }
