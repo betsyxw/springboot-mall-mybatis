@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 //导入常量包
@@ -19,6 +20,9 @@ import static com.xuwen.javamall.consts.MallConst.ROOT_PARENT_ID;
  * author:xuwen
  * Created on 2021/9/7
  */
+/*
+*耗时：22ms，递归查询
+* */
 
 //数据库，接口的实现类
 
@@ -53,6 +57,7 @@ public class CategoryServiceImpl implements ICategoryService {
         List<CategoryVo> categoryVoList = categories.stream()
                 .filter(e -> e.getParentId().equals(ROOT_PARENT_ID))
                 .map(this::category2CategoryVo)
+                .sorted(Comparator.comparing(CategoryVo::getSortOrder).reversed())
                 .collect(Collectors.toList());
 
         //查询子目录,从categories数据源中，查找categoryVoList
@@ -74,6 +79,7 @@ public class CategoryServiceImpl implements ICategoryService {
                     CategoryVo subCategoryVo = category2CategoryVo(category);
                     subCategoryVoList.add(subCategoryVo);
                 }
+                subCategoryVoList.sort(Comparator.comparing(CategoryVo::getSortOrder).reversed());
                 //数据关联
                 categoryVo.setSubCategories(subCategoryVoList);
                 //继续向下查,第一个参数，子目录，第二个参数是数据源
