@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 //导入常量包
 import static com.xuwen.javamall.consts.MallConst.ROOT_PARENT_ID;
@@ -69,6 +70,26 @@ public class CategoryServiceImpl implements ICategoryService {
 
         return ResponseVo.success(categoryVoList);
     }
+
+    //商品列表查询，查询子类目
+    @Override
+    public void findSubCategoryId(Integer id, Set<Integer> resultSet) {
+        //把数据源拿到,categories数据库查到的数据源数据
+        List<Category> categories = categoryMapper.selectAll();
+        findSubCategoryId(id,resultSet,categories);
+
+    }
+    private void findSubCategoryId(Integer id, Set<Integer> resultSet,List<Category> categories){
+        for (Category category : categories) {
+            if(category.getParentId().equals(id)){
+                //放入数据
+                resultSet.add(category.getId());
+                //继续往下查,递归查询
+                findSubCategoryId(category.getId(),resultSet,categories);
+            }
+        }
+    }
+
 
     //方法
     private void findSubCategory(List<CategoryVo> categoryVoList,List<Category> categories){
