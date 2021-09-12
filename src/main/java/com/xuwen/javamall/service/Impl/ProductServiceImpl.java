@@ -6,6 +6,7 @@ import com.xuwen.javamall.dao.ProductMapper;
 import com.xuwen.javamall.pojo.Product;
 import com.xuwen.javamall.service.ICategoryService;
 import com.xuwen.javamall.service.IProductService;
+import com.xuwen.javamall.vo.ProductDetailVo;
 import com.xuwen.javamall.vo.ProductVo;
 import com.xuwen.javamall.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.xuwen.javamall.enums.ProductStatusEnum.OFF_SALE;
+import static com.xuwen.javamall.enums.ProductStatusEnum.DELETE;
+import static com.xuwen.javamall.enums.ResponseEnum.PRODUCT_OFF_SALE_OR_DELETE;
 
 /**
  * author:xuwen
@@ -55,5 +60,19 @@ public class ProductServiceImpl implements IProductService {
         PageInfo pageInfo = new PageInfo<>(productList);
         pageInfo.setList(productVoList);
         return ResponseVo.success(pageInfo);
+    }
+
+
+    //商品详情页
+    @Override
+    public ResponseVo<ProductDetailVo> detail(Integer productId) {
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if(product.getStatus().equals(OFF_SALE.getCode()) || product.getStatus().equals(DELETE.getCode())){
+            return ResponseVo.error(PRODUCT_OFF_SALE_OR_DELETE);
+        }
+        ProductDetailVo productDetailVo = new ProductDetailVo();
+        BeanUtils.copyProperties(product,productDetailVo);
+
+        return ResponseVo.success(productDetailVo);
     }
 }

@@ -2,6 +2,7 @@ package com.xuwen.javamall.service;
 
 import com.xuwen.javamall.JavamallApplicationTests;
 import com.xuwen.javamall.enums.ResponseEnum;
+import com.xuwen.javamall.vo.ProductDetailVo;
 import com.xuwen.javamall.vo.ProductVo;
 import com.xuwen.javamall.vo.ResponseVo;
 import org.junit.Assert;
@@ -23,4 +24,6 @@ public class IProductServiceTest extends JavamallApplicationTests {
 //      ResponseVo<List<ProductVo>> responseVo =  productService.list(null,1,1);
 //        Assert.assertEquals(ResponseEnum.SUCCESS.getCode(),responseVo.getStatus());
     }
+
+
 }
