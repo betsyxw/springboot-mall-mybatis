@@ -1,6 +1,7 @@
 package com.xuwen.javamall.service.Impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xuwen.javamall.dao.ProductMapper;
 import com.xuwen.javamall.pojo.Product;
 import com.xuwen.javamall.service.ICategoryService;
@@ -33,7 +34,7 @@ public class ProductServiceImpl implements IProductService {
 
 
     @Override
-    public ResponseVo<List<ProductVo>> list(Integer categoryId, Integer pageNum, Integer pageSize) {
+    public ResponseVo<PageInfo> list(Integer categoryId, Integer pageNum, Integer pageSize) {
         Set<Integer> categoryIdSet = new HashSet<>();
         if(categoryId != null){
             categoryService.findSubCategoryId(categoryId,categoryIdSet);
@@ -41,7 +42,9 @@ public class ProductServiceImpl implements IProductService {
         }
         //pageHelper
         PageHelper.startPage(pageNum,pageSize);
-        List<ProductVo> productVoList = productMapper.selectByCategoryIdSet(categoryIdSet).stream()
+        //productList是数据库中，查出的信息！
+        List<Product> productList = productMapper.selectByCategoryIdSet(categoryIdSet);
+        List<ProductVo> productVoList = productList.stream()
                 .map(e -> {
                     ProductVo productVo = new ProductVo();
                     BeanUtils.copyProperties(e, productVo);
@@ -49,6 +52,8 @@ public class ProductServiceImpl implements IProductService {
                 })
                 .collect(Collectors.toList());
 
-        return ResponseVo.success(productVoList);
+        PageInfo pageInfo = new PageInfo<>(productList);
+        pageInfo.setList(productVoList);
+        return ResponseVo.success(pageInfo);
     }
 }
