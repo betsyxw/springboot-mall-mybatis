@@ -5,6 +5,9 @@ spring:
     username: mall
     password: passMall123
     url: jdbc:mysql://rm-uf6t9m0yx22dxrya5no.mysql.rds.aliyuncs.com:3306/mall?characterEncoding=UTF8&useSSL=false
+  redis:
+    host: 47.103.57.195
+    port: 6379
 
 mybatis:
   configuration:
