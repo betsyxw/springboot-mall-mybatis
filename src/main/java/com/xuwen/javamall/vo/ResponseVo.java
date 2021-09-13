@@ -5,6 +5,8 @@ import com.xuwen.javamall.enums.ResponseEnum;
 import lombok.Data;
 import org.springframework.validation.BindingResult;
 
+import java.util.Objects;
+
 /**
  * author:xuwen
  * Created on 2021/9/4
@@ -59,9 +61,9 @@ public class ResponseVo<T> {
     }
 
     //静态方法，error3
-    public static <T> ResponseVo error(ResponseEnum responseEnum, BindingResult bindingResult){
-        return new ResponseVo(responseEnum.getCode(),
-                bindingResult.getFieldError().getField()+" "+bindingResult.getFieldError().getDefaultMessage());
+    public static <T> ResponseVo<T> error(ResponseEnum responseEnum, BindingResult bindingResult){
+        return new ResponseVo<>(responseEnum.getCode(),
+                Objects.requireNonNull(bindingResult.getFieldError()).getField()+" "+bindingResult.getFieldError().getDefaultMessage());
     }
 
 }
