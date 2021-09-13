@@ -9,6 +9,6 @@ import com.xuwen.javamall.vo.ResponseVo;
 //接口
 public interface ICartService {
 
-    ResponseVo<CartVo> add(CartAddForm form);
+    ResponseVo<CartVo> add(Integer uid,CartAddForm form);
 
 }
