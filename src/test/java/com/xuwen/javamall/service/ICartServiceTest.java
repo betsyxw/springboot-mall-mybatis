@@ -4,8 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.xuwen.javamall.JavamallApplicationTests;
 import com.xuwen.javamall.form.CartAddForm;
+import com.xuwen.javamall.form.CartUpdateForm;
 import com.xuwen.javamall.vo.CartVo;
 import com.xuwen.javamall.vo.ResponseVo;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +34,22 @@ public class ICartServiceTest extends JavamallApplicationTests {
     }
 
     @Test
-    public void test(){
+    public void list(){
         ResponseVo<CartVo> list = cartService.list(1);
         log.info("list={}",gson.toJson(list));
     }
+
+    @Test
+    public void update(){
+        CartUpdateForm form = new CartUpdateForm();
+        form.setQuantity(5);
+        form.setSelected(false);
+        ResponseVo<CartVo> responseVo = cartService.update(1, 26,form);
+        log.info("list={}",gson.toJson(responseVo));
+
+    }
+
+
 
 
 }

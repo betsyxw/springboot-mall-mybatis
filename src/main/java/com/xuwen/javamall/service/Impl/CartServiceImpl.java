@@ -166,6 +166,27 @@ public class CartServiceImpl implements ICartService {
      * */
     @Override
     public ResponseVo<CartVo> update(Integer uid, Integer productId, CartUpdateForm form) {
-        return null;
+        //要更新，先查redis
+        HashOperations<String, String, String> opsForHash = redisTemplate.opsForHash();
+        String redisKey = String.format(CART_REDIS_KEY_TEMPLATE,uid);
+        String value = opsForHash.get(redisKey, String.valueOf(productId));
+
+        if(StringUtils.isEmpty(value)){
+            //空，redis没有商品，数据出错
+            return ResponseVo.error(ResponseEnum.CART_PRODUCT_NOT_EXIST);
+
+        }
+            //有，修改
+        Cart cart = gson.fromJson(value, Cart.class);
+        if(form.getQuantity()!=null && form.getQuantity()>=0){
+            cart.setQuantity(form.getQuantity());
+        }
+        if(form.getSelected()!=null){
+            cart.setProductSelected(form.getSelected());
+        }
+
+        opsForHash.put(redisKey,String.valueOf(productId),gson.toJson(cart));
+
+        return list(uid);
     }
 }
