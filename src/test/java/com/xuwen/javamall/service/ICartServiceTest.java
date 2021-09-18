@@ -31,6 +31,7 @@ public class ICartServiceTest extends JavamallApplicationTests {
 
     @Before
     public void add() {
+        log.info("[新增购物车...]");
         CartAddForm form = new CartAddForm();
         form.setProductId(productId);
         form.setSelected(true);
@@ -57,6 +58,7 @@ public class ICartServiceTest extends JavamallApplicationTests {
 
     @After
     public void delete(){
+        log.info("[删除购物车...]");
         ResponseVo<CartVo> responseVo = cartService.delete(uid, productId);
         log.info("result={}",gson.toJson(responseVo));
 
