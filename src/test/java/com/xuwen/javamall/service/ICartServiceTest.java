@@ -45,7 +45,14 @@ public class ICartServiceTest extends JavamallApplicationTests {
         form.setQuantity(5);
         form.setSelected(false);
         ResponseVo<CartVo> responseVo = cartService.update(1, 26,form);
-        log.info("list={}",gson.toJson(responseVo));
+        log.info("result={}",gson.toJson(responseVo));
+
+    }
+
+    @Test
+    public void delete(){
+        ResponseVo<CartVo> responseVo = cartService.delete(1, 26);
+        log.info("result={}",gson.toJson(responseVo));
 
     }
 

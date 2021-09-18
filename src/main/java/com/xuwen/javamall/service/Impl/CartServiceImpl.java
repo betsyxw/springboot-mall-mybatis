@@ -189,4 +189,22 @@ public class CartServiceImpl implements ICartService {
 
         return list(uid);
     }
+
+    /**
+     * 删除delete
+     *
+     * **/
+    @Override
+    public ResponseVo<CartVo> delete(Integer uid, Integer productId) {
+        HashOperations<String, String, String> opsForHash = redisTemplate.opsForHash();
+        String redisKey = String.format(CART_REDIS_KEY_TEMPLATE,uid);
+        String value = opsForHash.get(redisKey, String.valueOf(productId));
+        if(StringUtils.isEmpty(value)){
+            //空，redis没有商品，数据出错
+            return ResponseVo.error(ResponseEnum.CART_PRODUCT_NOT_EXIST);
+
+        }
+        opsForHash.delete(redisKey,String.valueOf(productId));
+        return list(uid);
+    }
 }
