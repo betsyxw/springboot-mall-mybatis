@@ -2,6 +2,7 @@ package com.xuwen.javamall.service;
 
 
 import com.xuwen.javamall.form.CartAddForm;
+import com.xuwen.javamall.form.CartUpdateForm;
 import com.xuwen.javamall.vo.CartVo;
 import com.xuwen.javamall.vo.ResponseVo;
 
@@ -10,5 +11,9 @@ import com.xuwen.javamall.vo.ResponseVo;
 public interface ICartService {
 
     ResponseVo<CartVo> add(Integer uid,CartAddForm form);
+
+    ResponseVo<CartVo> list(Integer uid);
+
+    ResponseVo<CartVo> update(Integer uid, Integer productId, CartUpdateForm form);
 
 }
