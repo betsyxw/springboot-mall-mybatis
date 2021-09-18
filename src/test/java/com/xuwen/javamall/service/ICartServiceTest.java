@@ -9,6 +9,8 @@ import com.xuwen.javamall.vo.CartVo;
 import com.xuwen.javamall.vo.ResponseVo;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,19 +25,23 @@ public class ICartServiceTest extends JavamallApplicationTests {
 
     private Gson gson = new  GsonBuilder().setPrettyPrinting().create();
 
-    @Test
+    private Integer productId = 26;
+
+    private Integer uid = 1;
+
+    @Before
     public void add() {
         CartAddForm form = new CartAddForm();
-        form.setProductId(29);
+        form.setProductId(productId);
         form.setSelected(true);
 
-        ResponseVo<CartVo> responseVo = cartService.add(1, form);
+        ResponseVo<CartVo> responseVo = cartService.add(uid, form);
         log.info("list={}",gson.toJson(responseVo));
     }
 
     @Test
     public void list(){
-        ResponseVo<CartVo> list = cartService.list(1);
+        ResponseVo<CartVo> list = cartService.list(uid);
         log.info("list={}",gson.toJson(list));
     }
 
@@ -44,19 +50,39 @@ public class ICartServiceTest extends JavamallApplicationTests {
         CartUpdateForm form = new CartUpdateForm();
         form.setQuantity(5);
         form.setSelected(false);
-        ResponseVo<CartVo> responseVo = cartService.update(1, 26,form);
+        ResponseVo<CartVo> responseVo = cartService.update(uid, productId,form);
+        log.info("result={}",gson.toJson(responseVo));
+
+    }
+
+    @After
+    public void delete(){
+        ResponseVo<CartVo> responseVo = cartService.delete(uid, productId);
         log.info("result={}",gson.toJson(responseVo));
 
     }
 
     @Test
-    public void delete(){
-        ResponseVo<CartVo> responseVo = cartService.delete(1, 26);
+    public void selectAll(){
+        ResponseVo<CartVo> responseVo = cartService.selectAll(uid);
         log.info("result={}",gson.toJson(responseVo));
 
     }
 
 
+    @Test
+    public void unSelectAll(){
+        ResponseVo<CartVo> responseVo = cartService.unSelectAll(uid);
+        log.info("result={}",gson.toJson(responseVo));
+
+    }
+
+    @Test
+    public void sum(){
+        ResponseVo<Integer> responseVo = cartService.sum(uid);
+        log.info("result={}",gson.toJson(responseVo));
+
+    }
 
 
 }
