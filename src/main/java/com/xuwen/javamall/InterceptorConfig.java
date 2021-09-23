@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * author:xuwen
  * Created on 2021/9/7
+ * 别忘记把/carts购物车接口去掉，需要登陆校验才能操作购物车
  */
 
 @Configuration
