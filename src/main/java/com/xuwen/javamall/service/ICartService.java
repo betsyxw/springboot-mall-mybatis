@@ -3,8 +3,11 @@ package com.xuwen.javamall.service;
 
 import com.xuwen.javamall.form.CartAddForm;
 import com.xuwen.javamall.form.CartUpdateForm;
+import com.xuwen.javamall.pojo.Cart;
 import com.xuwen.javamall.vo.CartVo;
 import com.xuwen.javamall.vo.ResponseVo;
+
+import java.util.List;
 
 
 //接口
@@ -23,5 +26,7 @@ public interface ICartService {
     ResponseVo<CartVo> unSelectAll(Integer uid);
 
     ResponseVo<Integer> sum(Integer uid);
+
+    List<Cart> listForCart(Integer uid);
 
 }

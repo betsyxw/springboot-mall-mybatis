@@ -1,15 +1,16 @@
-package com.xuwen.javamall.pojo;
+package com.xuwen.javamall.vo;
 
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * author:xuwen
+ * Created on 2021/9/23
+ */
 @Data
-public class OrderItem {
-    private Integer id;
-
-    private Integer userId;
+public class OrderItemVo {
 
     private Long orderNo;
 
@@ -26,8 +27,6 @@ public class OrderItem {
     private BigDecimal totalPrice;
 
     private Date createTime;
-
-    private Date updateTime;
 
 
 }

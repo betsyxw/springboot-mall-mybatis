@@ -29,7 +29,7 @@ public class ICartServiceTest extends JavamallApplicationTests {
 
     private Integer uid = 1;
 
-    @Before
+    @Test
     public void add() {
         log.info("[新增购物车...]");
         CartAddForm form = new CartAddForm();
@@ -56,7 +56,8 @@ public class ICartServiceTest extends JavamallApplicationTests {
 
     }
 
-    @After
+    @Test
+    //@After
     public void delete(){
         log.info("[删除购物车...]");
         ResponseVo<CartVo> responseVo = cartService.delete(uid, productId);

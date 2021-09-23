@@ -179,4 +179,16 @@
     from mall_shipping
     where user_id = #{uid,jdbcType=INTEGER}
   </select>
+
+<!--  selectByUidAndShippingId-->
+  <!--数据库字段id对应shippingId，数据库user_id对应uid-->
+  <select id="selectByUidAndShippingId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mall_shipping
+    where id = #{shippingId,jdbcType=INTEGER}
+    and user_id=#{uid,jdbcType=INTEGER}
+  </select>
+
+
 </mapper>
