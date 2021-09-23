@@ -3,6 +3,8 @@ package com.xuwen.javamall.dao;
 import com.xuwen.javamall.pojo.Shipping;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface ShippingMapper {
 
     int deleteByPrimaryKey(Integer id);
@@ -16,7 +18,10 @@ public interface ShippingMapper {
 
     Shipping selectByPrimaryKey(Integer id);
 
+
     int updateByPrimaryKeySelective(Shipping record);
 
     int updateByPrimaryKey(Shipping record);
+
+    List<Shipping> selectByUid(Integer uid);
 }

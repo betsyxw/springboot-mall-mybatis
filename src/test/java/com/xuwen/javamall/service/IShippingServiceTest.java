@@ -5,6 +5,7 @@ import com.xuwen.javamall.enums.ResponseEnum;
 import com.xuwen.javamall.form.ShippingForm;
 import com.xuwen.javamall.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,13 +24,13 @@ public class IShippingServiceTest extends JavamallApplicationTests {
 
     private ShippingForm form;
 
-    private Integer shippingId = 8;
+    private Integer shippingId;
 
     @Before
     public void before(){
         ShippingForm form = new ShippingForm();
         form.setReceiverName("张三");
-        form.setReceiverAddress("文酱6");
+        form.setReceiverAddress("文酱9");
         form.setReceiverCity("上海");
         form.setReceiverDistrict("浦东新区");
         form.setReceiverMobile("1331991919");
@@ -37,17 +38,19 @@ public class IShippingServiceTest extends JavamallApplicationTests {
         form.setReceiverProvince("上海");
         form.setReceiverZip("200010");
         this.form = form;
+
+        add();
     }
 
-    @Test
     public void add() {
 
         ResponseVo<Map<String, Integer>> responseVo = shippingService.add(uid, form);
         log.info("result={}"+responseVo);
+        this.shippingId = responseVo.getData().get("shippingId");
         Assert.assertEquals(ResponseEnum.SUCCESS.getCode(),responseVo.getStatus());
     }
 
-    @Test
+    @After
     public void delete() {
 
         ResponseVo responseVo = shippingService.delete(uid, shippingId);
@@ -57,8 +60,8 @@ public class IShippingServiceTest extends JavamallApplicationTests {
 
     @Test
     public void update() {
-        form.setReceiverZip("081001");
-        form.setReceiverName("张三");
+        form.setReceiverZip("010010");
+        form.setReceiverName("李四");
         form.setReceiverPhone("100086");
         form.setReceiverProvince("杭州");
         ResponseVo responseVo = shippingService.update(uid,shippingId,form);
@@ -70,5 +73,8 @@ public class IShippingServiceTest extends JavamallApplicationTests {
 
     @Test
     public void list() {
+        ResponseVo responseVo = shippingService.list(uid,1,10);
+        log.info("result={}"+responseVo);
+        Assert.assertEquals(ResponseEnum.SUCCESS.getCode(),responseVo.getStatus());
     }
 }
