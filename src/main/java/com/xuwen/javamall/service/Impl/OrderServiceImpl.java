@@ -1,5 +1,7 @@
 package com.xuwen.javamall.service.Impl;
 
+import com.xuwen.javamall.dao.OrderItemMapper;
+import com.xuwen.javamall.dao.OrderMapper;
 import com.xuwen.javamall.dao.ProductMapper;
 import com.xuwen.javamall.dao.ShippingMapper;
 import com.xuwen.javamall.enums.OrderStatusEnum;
@@ -35,6 +37,12 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private OrderItemMapper orderItemMapper;
 
 
     @Override
@@ -91,9 +99,16 @@ public class OrderServiceImpl implements IOrderService {
          * 计算总价
          * 生成订单，入库，2个表，order，和order_item,同时写入事务！
          * */
-        buildOrder(uid,orderNo,shippingId,orderItemList);
+        Order order = buildOrder(uid, orderNo, shippingId, orderItemList);
+        int rowForOrder = orderMapper.insertSelective(order);
+        if(rowForOrder<=0){
+            return ResponseVo.error(ResponseEnum.ERROR);
+        }
 
-
+        int rowForOrderItem = orderItemMapper.batchInsert(orderItemList);
+        if(rowForOrderItem<=0){
+            return ResponseVo.error(ResponseEnum.ERROR);
+        }
 
 
         //减库存

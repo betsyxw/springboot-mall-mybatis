@@ -14,6 +14,7 @@ import java.util.Objects;
  * author:xuwen
  * Created on 2021/9/4
  * 统一异常处理！！！
+ * 处理：RuntimeException
  *
  */
 //为了返回，JSON格式，一定要+ResponseBody
