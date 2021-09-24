@@ -31,6 +31,7 @@ public class RuntimeExceptionHandler {
     @ExceptionHandler(UserloginException.class)
     @ResponseBody
     public ResponseVo userLoginHandle(){
+        //ResponseVo返回给前端的对象，ResoponseEnum枚举错误类
         return ResponseVo.error(ResponseEnum.NEED_LOGIN);
     }
 
