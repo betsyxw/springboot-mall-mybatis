@@ -166,7 +166,7 @@
   </update>
 
 
-<!--数据库字段id对应shippingId，数据库user_id对应uid-->
+<!--数据库字段id对应shippingId，数据库user_id对应uid, 万能的map-->
   <delete id="deleteByIdAndUid" parameterType="map">
     delete from mall_shipping
     where id = #{shippingId,jdbcType=INTEGER}

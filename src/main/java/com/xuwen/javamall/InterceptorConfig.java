@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * Created on 2021/9/7
  * 别忘记把/carts购物车接口去掉，需要登陆校验才能操作购物车
  */
+//自定义扩展mvc的功能，step1：@Configuration，step2：implements WebMvcConfigurer
 
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {

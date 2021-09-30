@@ -10,6 +10,16 @@ import java.util.Objects;
 /**
  * author:xuwen
  * Created on 2021/9/4
+ * 模版：
+ * 404
+ * 服务器错误
+ * data:[{
+ *
+ * },{
+ *
+ * },{
+ *
+ * }]
  */
 //JSON序列化，data是null的时候，不返回，追加注解
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
