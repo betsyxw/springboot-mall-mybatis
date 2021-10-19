@@ -9,6 +9,7 @@ spring:
     host: 47.103.57.195
     port: 6379
 
+
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

@@ -162,7 +162,7 @@ public class CartServiceImpl implements ICartService {
     /**
      * Update更新购物车
      * 返回值：ResponseVo<CartVo>
-     *
+     *redis序列化，redisTemplate,redis默认<Object,Object>,我们的需求<String,Object>
      * */
     @Override
     public ResponseVo<CartVo> update(Integer uid, Integer productId, CartUpdateForm form) {

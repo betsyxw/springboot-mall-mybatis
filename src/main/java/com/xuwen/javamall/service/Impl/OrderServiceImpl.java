@@ -16,6 +16,7 @@ import com.xuwen.javamall.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -46,22 +47,24 @@ public class OrderServiceImpl implements IOrderService {
 
 
     @Override
+    @Transactional//开启事务,innodb支持，Myisam不支持事务
     public ResponseVo<OrderVo> create(Integer uid, Integer shippingId) {
         /**
-         * 收货地址校验，从数据库中取得
+         * 收货地址校验，从数据库中shippingMapper查
          * */
-        //shipping,dao中数据，注入
+        //shippingMapper
         Shipping shipping = shippingMapper.selectByUidAndShippingId(uid, shippingId);
         if(shipping == null){
             return ResponseVo.error(ResponseEnum.SHIPPING_NOT_EXIST);
         }
         /**
-         * 获取购物车+校验(是否有商品，库存)
+         * uid->获取购物车+校验(是否有商品，库存),stream选中商品
          * 选中商品，用steamAPI
          * */
         List<Cart> cartList = cartService.listForCart(uid).stream()
                 .filter(Cart::getProductSelected)
                 .collect(Collectors.toList());
+        //list是否是空的
         if(CollectionUtils.isEmpty(cartList)){
             return ResponseVo.error(ResponseEnum.CART_SELECTED_IS_EMPTY);
         }
@@ -69,17 +72,17 @@ public class OrderServiceImpl implements IOrderService {
         //productList是从数据库中获取到的数据！
         Set<Integer> productIdSet = cartList.stream().map(Cart::getProductId).collect(Collectors.toSet());
         List<Product> productList = productMapper.selectByProductIdSet(productIdSet);
-        //自己造了map，传入我需要的信息
+        //productList->改造map,自己造了map，数据库信息map
         Map<Integer,Product> map = productList.stream()
                 .collect(Collectors.toMap(Product::getId,product->product));
-
 
         //数据库查库存
         List<OrderItem> orderItemList = new ArrayList<>();
         Long orderNo = generateOrderNo();
         for (Cart cart : cartList) {
+            //根据productId查询数据库
             Product product = map.get(cart.getProductId());
-            //是否有该商品
+            //是否有该商品,对比数据库
             if(product == null){
                 return ResponseVo.error(ResponseEnum.PRODUCT_NOT_EXIST,"商品不存在.productId="+cart.getProductId());
             }
@@ -100,6 +103,7 @@ public class OrderServiceImpl implements IOrderService {
          * 生成订单，入库，2个表，order，和order_item,同时写入事务！
          * */
         Order order = buildOrder(uid, orderNo, shippingId, orderItemList);
+        //事务控制
         int rowForOrder = orderMapper.insertSelective(order);
         if(rowForOrder<=0){
             return ResponseVo.error(ResponseEnum.ERROR);
@@ -117,20 +121,17 @@ public class OrderServiceImpl implements IOrderService {
         //更新购物车
 
 
-        //构造orderVo对象
+        //构造orderVo对象,返回给前端
 
 
 
-        return null;
+        return ResponseVo.success();
     }
 
-    private Order buildOrder(Integer uid,
-                             Long orderNo,
-                             Integer shippingId,
-                             List<OrderItem> orderItemList) {
+    private Order buildOrder(Integer uid, Long orderNo, Integer shippingId, List<OrderItem> orderItemList) {
         //太长了，外面计算好，再传入
-        BigDecimal payment = orderItemList.stream()
-                .map(OrderItem::getTotalPrice)
+        //返回值是Order没有自己new一个
+        BigDecimal payment = orderItemList.stream().map(OrderItem::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         Order order = new Order();
         order.setOrderNo(orderNo);
@@ -148,11 +149,12 @@ public class OrderServiceImpl implements IOrderService {
      * 企业级：自己搜索分布式唯一ID
      * */
     private Long generateOrderNo() {
-        //系统时间+3位随机数
+        //系统时间+3位int随机数
         return System.currentTimeMillis()+new Random().nextInt(999);
     }
 
     private OrderItem buildOrderItem(Integer uid,Long orderNo,Integer quantity,Product product) {
+        //返回值是OrderItem没有自己new一个
         OrderItem item = new OrderItem();
         item.setUserId(uid);
         item.setOrderNo(orderNo);
