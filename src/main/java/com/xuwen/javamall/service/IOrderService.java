@@ -15,6 +15,10 @@ public interface IOrderService {
     //订单详情
     ResponseVo<OrderVo> detail(Integer uid, Long orderNo);
 
+    //取消订单
+    ResponseVo cancel(Integer uid, Long orderNo);
+
+
 
 
 

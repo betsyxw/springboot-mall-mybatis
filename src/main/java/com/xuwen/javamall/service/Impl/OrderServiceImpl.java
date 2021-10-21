@@ -183,6 +183,28 @@ public class OrderServiceImpl implements IOrderService {
         return ResponseVo.success(orderVo);
     }
 
+    //取消订单，校验订单是不是属于这个用户
+    @Override
+    public ResponseVo cancel(Integer uid, Long orderNo) {
+        //校验订单是不是属于这个用户
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        if(order ==null || !order.getUserId().equals(uid)){
+            return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+        }
+        //未付款才可以取消，
+        if(!order.getStatus().equals(OrderStatusEnum.NO_PAY.getCode())){
+            return ResponseVo.error(ResponseEnum.ORDER_STATUS_ERROR);
+        }
+        //取消订单，写入时间戳
+        order.setStatus(OrderStatusEnum.CANCELED.getCode());
+        order.setCloseTime(new Date());
+        int row = orderMapper.updateByPrimaryKeySelective(order);
+        if(row <=0){
+            return ResponseVo.error(ResponseEnum.ERROR);
+        }
+        return ResponseVo.success();
+    }
+
     //构造返回给前端的Vo对象
     private OrderVo buildOrderVo(Order order,List<OrderItem> orderItemList,Shipping shipping) {
         OrderVo orderVo = new OrderVo();
