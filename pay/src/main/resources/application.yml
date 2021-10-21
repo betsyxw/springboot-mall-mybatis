@@ -7,4 +7,8 @@ spring:
 logging:
   pattern:
     console: "[%thread] %-5level %logger{36} - %msg%n"
-
+  rabbbitmq:
+    addresses: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
