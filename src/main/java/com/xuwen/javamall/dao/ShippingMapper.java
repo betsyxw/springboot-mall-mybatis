@@ -4,6 +4,7 @@ import com.xuwen.javamall.pojo.Shipping;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ShippingMapper {
 
@@ -27,4 +28,7 @@ public interface ShippingMapper {
 
     Shipping selectByUidAndShippingId(@Param("uid") Integer uid,
                                       @Param("shippingId") Integer shippingId);
+
+
+    List<Shipping> selectByIdSet(@Param("idSet") Set idSet);
 }

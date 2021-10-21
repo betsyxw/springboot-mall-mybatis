@@ -1,5 +1,7 @@
 package com.xuwen.javamall.service.Impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xuwen.javamall.dao.OrderItemMapper;
 import com.xuwen.javamall.dao.OrderMapper;
 import com.xuwen.javamall.dao.ProductMapper;
@@ -11,9 +13,11 @@ import com.xuwen.javamall.enums.ResponseEnum;
 import com.xuwen.javamall.pojo.*;
 import com.xuwen.javamall.service.ICartService;
 import com.xuwen.javamall.service.IOrderService;
+import com.xuwen.javamall.vo.OrderItemVo;
 import com.xuwen.javamall.vo.OrderVo;
 import com.xuwen.javamall.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,6 +101,15 @@ public class OrderServiceImpl implements IOrderService {
 
             OrderItem orderItem = buildOrderItem(uid, orderNo, cart.getQuantity(), product);
             orderItemList.add(orderItem);
+
+            //减库存
+            product.setStock(product.getStock()-cart.getQuantity());
+            //updateByPrimaryKeySelective不需要每个字段都传
+            int row = productMapper.updateByPrimaryKeySelective(product);
+            if(row <=0){
+                return ResponseVo.error(ResponseEnum.ERROR);
+            }
+
         }
         /**
          * 计算总价
@@ -115,24 +128,85 @@ public class OrderServiceImpl implements IOrderService {
         }
 
 
-        //减库存
 
-
-        //更新购物车
-
+        //更新购物车,操作redis
+        //redis的事务是打包命令，单线程，无法回滚
+        for (Cart cart : cartList) {
+            cartService.delete(uid,cart.getProductId());
+        }
 
         //构造orderVo对象,返回给前端
+        OrderVo orderVo = buildOrderVo(order, orderItemList, shipping);
+        return ResponseVo.success(orderVo);
+    }
 
+    //PageInfo//订单列表
+    @Override
+    public ResponseVo<PageInfo> list(Integer uid, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        //需要另外2个入参，1orderList，2收货地址
+        List<Order> orderList = orderMapper.selectByUid(uid);
+        Set<Long> orderNumSet = orderList.stream().map(Order::getOrderNo).collect(Collectors.toSet());
+        List<OrderItem> orderItemList = orderItemMapper.selectByOrderNoSet(orderNumSet);
+        //orderItemList->Map的结构
+        Map<Long,List<OrderItem>> orderItemMap= orderItemList.stream().collect(Collectors.groupingBy(OrderItem::getOrderNo));
+        Set<Integer> shippingIdSet = orderList.stream().map(Order::getShippingId).collect(Collectors.toSet());
+        List<Shipping> shippingList = shippingMapper.selectByIdSet(shippingIdSet);
+        Map<Integer,Shipping> shippingMap = shippingList.stream().collect(Collectors.toMap(Shipping::getId,shipping->shipping));
 
+        //构造Vo对象
+        List<OrderVo> orderVoList = new ArrayList<>();
+        for(Order order:orderList){
+            //buildOrderVo下方已经构造好了，传入的参数需要重新筛选
+            OrderVo orderVo = buildOrderVo(order, orderItemMap.get(order.getOrderNo()), shippingMap.get(order.getShippingId()));
+            orderVoList.add(orderVo);
+        }
 
-        return ResponseVo.success();
+        //返回信息pageInfo
+        PageInfo pageInfo = new PageInfo(orderList);
+        pageInfo.setList(orderVoList);
+        return ResponseVo.success(pageInfo);
+    }
+
+    //订单详情detail
+    @Override
+    public ResponseVo<OrderVo> detail(Integer uid, Long orderNo) {
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        if(order ==null || !order.getUserId().equals(uid)){
+            return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+        }
+        Set<Long> orderNoSet = new HashSet();
+        orderNoSet.add(order.getOrderNo());
+        List<OrderItem> orderItemList = orderItemMapper.selectByOrderNoSet(orderNoSet);
+        Shipping shipping = shippingMapper.selectByPrimaryKey(order.getShippingId());
+        OrderVo orderVo = buildOrderVo(order, orderItemList, shipping);
+        return ResponseVo.success(orderVo);
+    }
+
+    //构造返回给前端的Vo对象
+    private OrderVo buildOrderVo(Order order,List<OrderItem> orderItemList,Shipping shipping) {
+        OrderVo orderVo = new OrderVo();
+        BeanUtils.copyProperties(order,orderVo);
+
+        List<OrderItemVo> orderItemVoList = orderItemList.stream().map(e -> {
+            OrderItemVo orderItemVo = new OrderItemVo();
+            BeanUtils.copyProperties(e, orderItemVo);
+            return orderItemVo;
+        }).collect(Collectors.toList());
+        orderVo.setOrderItemVoList(orderItemVoList);
+        if(shipping != null){
+            orderVo.setShippingId(shipping.getId());
+            orderVo.setShippingVo(shipping);
+        }
+
+        return orderVo;
     }
 
     private Order buildOrder(Integer uid, Long orderNo, Integer shippingId, List<OrderItem> orderItemList) {
         //太长了，外面计算好，再传入
-        //返回值是Order没有自己new一个
         BigDecimal payment = orderItemList.stream().map(OrderItem::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+        //返回值是Order没有自己new一个
         Order order = new Order();
         order.setOrderNo(orderNo);
         order.setUserId(uid);
